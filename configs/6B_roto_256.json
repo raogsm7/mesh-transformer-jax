@@ -22,7 +22,7 @@
   "tpu_size": 8,
 
   "bucket": "neo-models",
-  "model_dir": "mesh_jax_pile_6B_rotary",
+  "model_dir": "content/mesh-transformer-jax/data/ft_Data",
 
   "train_set": "openwebtext.train.index",
   "val_set": {
@@ -43,7 +43,7 @@
   "ckpt_every": 5,
   "keep_every": 10,
 
-  "name": "GPT3_6B_pile_rotary",
+  "name": "GPT3_6B_finetune_rotary",
   "wandb_project": "mesh-transformer-jax",
   "comment": ""
 }

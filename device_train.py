@@ -20,6 +20,16 @@ from google.cloud.exceptions import NotFound
 
 from mesh_transformer.util import clip_by_global_norm, additive_weight_decay
 
+import os
+import requests 
+from jax.config import config
+colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
+url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
+requests.post(url)
+
+# The following is required to use TPU Driver as JAX's backend.
+config.FLAGS.jax_xla_backend = "tpu_driver"
+config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
 
 def parse_args():
     # Parse command line arguments
@@ -55,26 +65,29 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
         aux = {}
 
     try:
-        with open(f"gs://{bucket}/{path}/meta.json", "r") as f:
+        # with open(f"gs://{bucket}/{path}/meta.json", "r") as f:
+        with open(f"/{path}/meta.json", "r") as f:
             meta = json.load(f)
     except:
         # create metadata file
-        with open(f"gs://{bucket}/{path}/meta.json", "w") as f:
+        with open(f"/{path}/meta.json", "w") as f:
             json.dump({
                 "step": 0,
                 "checkpoints": [],
                 "aux": {}
             }, f)
 
-    # do sharded checkpoint writing
+    # do sharded checkpoint writing /content/mesh-transformer-jax/data/ft_Data
     start = time.time()
     res = []
     for shard_id in range(mp):
-        write_ckpt(network.state, f"gs://{bucket}/{path}/step_{step}/", shard_id)
+        # write_ckpt(network.state, f"gs://{bucket}/{path}/step_{step}/", shard_id)
+        write_ckpt(network.state, f"/{path}/step_{step}/", shard_id)
 
     print(f"Wrote checkpoint in {time.time() - start:.06}s")
 
-    with open(f"gs://{bucket}/{path}/meta.json", "r") as f:
+    # with open(f"gs://{bucket}/{path}/meta.json", "r") as f:
+    with open(f"/{path}/meta.json", "r") as f:
         meta = json.load(f)
 
     meta["step"] = step
@@ -101,7 +114,8 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     all_aux[step] = aux
     meta["aux"] = all_aux
 
-    with open(f"gs://{bucket}/{path}/meta.json", "w") as f:
+    # with open(f"gs://{bucket}/{path}/meta.json", "w") as f:
+    with open(f"/{path}/meta.json", "w") as f:
         json.dump(meta, f)
 
 
@@ -209,7 +223,8 @@ if __name__ == "__main__":
         print('`--tune_model_path` not passed: we are continuing a fine-tuning run from a checkpoint (or we are not fine-tuning)')
         fine_tuning = False
         initial_ckpt_model_dir = model_dir
-        initial_ckpt_path = f"gs://{bucket}/{initial_ckpt_model_dir}"
+        # initial_ckpt_path = f"gs://{bucket}/{initial_ckpt_model_dir}"
+        initial_ckpt_path = f"/{initial_ckpt_model_dir}"
         meta_path = f"{initial_ckpt_path}/meta.json"
 
         try:
@@ -233,7 +248,7 @@ if __name__ == "__main__":
     # set up datasets
     print("setting up datasets")
 
-    train_dataset = TFRecordNewInputs(f"data/{params['train_set']}",
+    train_dataset = TFRecordNewInputs(f"/content/mesh-transformer-jax/data/{params['train_set']}",
                                       batch_size=(
                                           gradient_accumulation_steps,
                                           per_replica_batch * tpu_size // cores_per_replica),
@@ -246,7 +261,7 @@ if __name__ == "__main__":
 
     for k, v in params["val_set"].items():
         val_sets[k] = TFRecordNewInputs(
-            f"data/{v}", batch_size=(global_val_batch,), sample_size=seq
+            f"/content/mesh-transformer-jax/data/{v}", batch_size=(global_val_batch,), sample_size=seq
         )
 
     # tok/sec metrics
