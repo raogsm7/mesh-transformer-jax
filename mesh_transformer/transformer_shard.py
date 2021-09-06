@@ -298,6 +298,20 @@ class CausalTransformer:
         # assert (sample["obs"][:, 1:] == sample["target"][:, -1])
 
         # start = time.time()
+        # added RG
+        import os
+        import requests 
+        from jax.config import config
+
+        colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
+        url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
+        requests.post(url)
+
+        # The following is required to use TPU Driver as JAX's backend.
+        config.FLAGS.jax_xla_backend = "tpu_driver"
+        config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
+        #added RG
+        
         loss, last_loss, grad_norm, grad_norm_micro, self.state = self.train_xmap(self.state, obs, target)
         loss = np.array(loss)
         last_loss = np.array(last_loss)

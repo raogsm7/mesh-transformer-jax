@@ -23,6 +23,7 @@ from mesh_transformer.util import clip_by_global_norm, additive_weight_decay
 import os
 import requests 
 from jax.config import config
+
 colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
 url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
 requests.post(url)
@@ -124,7 +125,17 @@ def train_step(network, data):
         "obs": data[:, :, :-1],
         "target": data[:, :, 1:],
     }
+    import os
+    import requests 
+    from jax.config import config
 
+    colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
+    url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
+    requests.post(url)
+
+    # The following is required to use TPU Driver as JAX's backend.
+    config.FLAGS.jax_xla_backend = "tpu_driver"
+    config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
     loss, last_loss, grad_norm, grad_norm_micro = network.train(inputs)
 
     return (
@@ -281,12 +292,12 @@ if __name__ == "__main__":
                 init_sched_state = network.state["opt_state"][-1]
 
             start = time.time()
-            network.state = read_ckpt(network.state, initial_ckpt_state_path, devices.shape[1], load_opt=(not args.fresh_opt))
+            # network.state = read_ckpt(network.state, initial_ckpt_state_path, devices.shape[1], load_opt=(not args.fresh_opt))
 
-            if fine_tuning:
-                # overwrite the loaded scheduler step with zeros
-                # this makes fine-tuning use the lr schedule in
-                network.state["opt_state"][-1] = init_sched_state
+            # if fine_tuning:
+            #     # overwrite the loaded scheduler step with zeros
+            #     # this makes fine-tuning use the lr schedule in
+            #     network.state["opt_state"][-1] = init_sched_state
 
             print(f"network loaded in {time.time() - start:.06}s")
 
