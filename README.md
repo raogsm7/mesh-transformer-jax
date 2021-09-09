@@ -1,5 +1,21 @@
 # Mesh Transformer JAX
 
+train - 
+layer 3
+hidden size 1024
+seq length - 1024
+max position embedding - 1024
+number of heads - 16
+
+learning decay ration - 3200
+
+10 evaluation steps
+evaluation intervals 1000  
+every 5000 save checkpoints
+total steps 10000
+warm mum -3200
+
+
 A haiku library using the `xmap`/`pjit` operators in JAX for model parallelism of transformers.
 
 The parallelism scheme is similar to the [original Megatron-LM](https://arxiv.org/abs/1909.08053), which is efficient
