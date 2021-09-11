@@ -121,21 +121,26 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
 
 
 def train_step(network, data):
+    print("network" , network)
+
     inputs = {
         "obs": data[:, :, :-1],
         "target": data[:, :, 1:],
     }
-    import os
-    import requests 
-    from jax.config import config
 
-    colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
-    url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
-    requests.post(url)
+    print("inputs", inputs)
+    # import os
+    # import requests 
+    # from jax.config import config
 
-    # The following is required to use TPU Driver as JAX's backend.
-    config.FLAGS.jax_xla_backend = "tpu_driver"
-    config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
+    # colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
+    # url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
+    # requests.post(url)
+
+    # # The following is required to use TPU Driver as JAX's backend.
+    # config.FLAGS.jax_xla_backend = "tpu_driver"
+    # config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
+
     loss, last_loss, grad_norm, grad_norm_micro = network.train(inputs)
 
     return (
@@ -319,6 +324,8 @@ if __name__ == "__main__":
 
         print('compiling train fn')
         start = time.time()
+
+        print("start", start)
         loss, last_loss, grad_norm, grad_norm_micro = train_step(
             network, train_dataset.get_samples()
         )

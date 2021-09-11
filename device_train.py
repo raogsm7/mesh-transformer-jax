@@ -192,7 +192,23 @@ if __name__ == "__main__":
     lr = params["lr"]
     end_lr = params["end_lr"]
     weight_decay = params["weight_decay"]
-   
+    print(
+          "bucket", bucket,
+          "model_dir", model_dir,
+          "layers", layers,
+          "d_model", d_model,
+          "n_heads", n_heads,
+          "n_vocab", n_vocab,
+          "seq", seq,
+          "norm", norm,
+
+          "val_batches", val_batches,
+          "val_every", val_every,
+          "ckpt_every", ckpt_every,
+          "keep_every", keep_every,
+          "total_steps", total_steps,
+          "total_steps", total_steps
+    )
     # alpha parameter for the exponential moving averages used to compute B_simple
     noise_scale_alpha = params.get("noise_scale_alpha", 0.01)
 
