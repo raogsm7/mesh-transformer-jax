@@ -132,9 +132,12 @@ class CausalTransformer:
             return eval_loss_fn(to_bf16(state["params"]), ctx, tgt, mask)
 
         def train(state, ctx, tgt):
+            print("you are in ct init train function...")
             def train_loss(x, y):
+                print("config at CT", config)
                 transformer = CausalTransformerShard(config)
                 out = transformer.loss(x, y, z_loss=True)
+                print("loss", out["loss"])
 
                 return out["loss"], out["last_loss"]
 
@@ -142,7 +145,7 @@ class CausalTransformer:
 
             def microbatch(old_grad, batch):
                 ctx, tgt = batch
-
+                print("batch****", batch, ctx, tgt)
                 val_grad_fn = jax.value_and_grad(train_loss_fn, has_aux=True)
                 (loss, last_loss), grad = val_grad_fn(to_bf16(state["params"]), ctx, tgt)
 
@@ -165,7 +168,7 @@ class CausalTransformer:
             grad = jax.lax.pmean(grad, "batch")
             grad_norm = global_norm(grad)
             updates, new_opt_state = optimizer.update(grad, state["opt_state"], state["params"])
-
+            print ("grad_norm", grad_norm)
             return to_f32(loss), to_f32(last_loss), to_f32(grad_norm), to_f32(grad_norm_micro), {
                 "params": optax.apply_updates(state["params"], to_f32(updates)),
                 "step": state["step"] + 1,
@@ -289,9 +292,11 @@ class CausalTransformer:
         # print("train iter")
         # print("sample", sample["obs"])
         # print("target", sample["target"])
+        print("you are inside train function")
         obs = jnp.transpose(sample["obs"], (1, 0, 2))
         target = jnp.transpose(sample["target"], (1, 0, 2))
-
+        print("obs", obs)
+        print("target", target)
         # print("train sample", obs.shape)
         # print("train target", target.shape)
 
@@ -299,21 +304,46 @@ class CausalTransformer:
 
         # start = time.time()
         # added RG
-        import os
-        import requests 
-        from jax.config import config
+        # import os
+        # import requests 
+        # from jax.config import config
 
-        colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
-        url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
-        requests.post(url)
+        # colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
+        # url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
+        # requests.post(url)
 
-        # The following is required to use TPU Driver as JAX's backend.
-        config.FLAGS.jax_xla_backend = "tpu_driver"
-        config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
+        # # The following is required to use TPU Driver as JAX's backend.
+        # config.FLAGS.jax_xla_backend = "tpu_driver"
+        # config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
+
+
+        params = {
+          "layers": 3,
+          "d_model": 1024,
+          "n_heads": 16,
+          "n_vocab": 50400,
+          "norm": "layernorm",
+          "pe": "rotary",
+          "pe_rotary_dims": 64,
+
+          "seq": 512,
+          "cores_per_replica": 8,
+          "per_replica_batch": 1,
+        }
+
+        per_replica_batch = params["per_replica_batch"]
+        cores_per_replica = params["cores_per_replica"]
+        seq = params["seq"]
+        print("per_replica_batch, cores_per_replica, seq***", per_replica_batch, cores_per_replica, seq)
+
+        total_batch = per_replica_batch * jax.device_count() // cores_per_replica
+
+        print("total_batch", total_batch)
         #added RG
         
         loss, last_loss, grad_norm, grad_norm_micro, self.state = self.train_xmap(self.state, obs, target)
         loss = np.array(loss)
+        print("loss", loss)
         last_loss = np.array(last_loss)
         grad_norm = np.array(grad_norm)
         # print(f"iter done in {time.time() - start:.06}s")

@@ -15,7 +15,7 @@ def build_model(params, tpu_name, region, preemptible, version=1):
     gradient_accumulation_steps = params.get("gradient_accumulation_steps", 1)
     cores_per_replica = params["cores_per_replica"]
     tpu_size = params["tpu_size"]
-
+    print("tpu_size", tpu_size, cores_per_replica, "cores_per_replica")
     warmup_steps = params["warmup_steps"]
     anneal_steps = params["anneal_steps"]
     lr = params["lr"]
@@ -28,6 +28,7 @@ def build_model(params, tpu_name, region, preemptible, version=1):
     assert wait_til(tpu_name, region, {'state': 'READY', 'health': 'HEALTHY'})
 
     conns = get_connection(tpu_name, region)
+    print ("conns", conns)
 
     assert len(conns) * 8 == tpu_size, "wrong size TPU for config"
 
