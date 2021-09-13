@@ -60,7 +60,7 @@ def parse_args():
 
 def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     assert path
-    client = storage.Client()
+    # client = storage.Client()
 
     if aux is None:
         aux = {}
