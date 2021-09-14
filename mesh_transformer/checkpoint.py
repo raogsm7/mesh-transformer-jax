@@ -2,6 +2,7 @@ import functools
 import io
 import json
 import time
+import os
 
 import jax
 import jax.numpy as jnp
@@ -35,6 +36,17 @@ def write(x, ckpt_dir):
     # start = time.time()
     idx, i = x
     # ckpt_dir = "/content/ckpt_dir/"
+    # mkdir(parents=True, exist_ok=True)
+    # print("ckpt_dir", ckpt_dir)
+    # ckpt_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        os.makedirs(ckpt_dir, exist_ok = True)
+        print("Directory '%s' created successfully" % ckpt_dir)
+    except OSError as error:
+        print("Directory '%s' can not be created" % ckpt_dir)
+    # ckpt_dir = "/content/ckpt_dir/"
+    file_path = ckpt_dir + f"{idx}.npz"
+    print("file_path", file_path)
     file_path = ckpt_dir + f"{idx}.npz"
     for _ in range(3):
         try:

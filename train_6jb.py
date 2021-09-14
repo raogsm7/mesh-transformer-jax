@@ -82,9 +82,12 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     start = time.time()
     res = []
     for shard_id in range(mp):
+        path_ckpt = f"/{path}/step_{step}/"
+        print ("path_ckpt", path_ckpt)
         # write_ckpt(network.state, f"gs://{bucket}/{path}/step_{step}/", shard_id)
         # write_ckpt(network.state, f"/{path}/step_{step}/", shard_id)
-        write_ckpt(network.state, f"/{ckpt_dir}/step_{step}/", shard_id)
+        write_ckpt(network.state, f"{path_ckpt}", shard_id)
+        # write_ckpt(network.state, f"/{ckpt_dir}/step_{step}/", shard_id)
 
     print(f"Wrote checkpoint in {time.time() - start:.06}s")
 
@@ -106,7 +109,16 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
 
         if delete_old:
             print(f"deleting checkpoint {ckpt_to_delete}")
-            del all_aux[str(ckpt_to_delete)]
+            file_d = f"{path}/step_{ckpt_to_delete}/" 
+            for f in os.listdir(file_d):
+                try:
+                    shutil.rmtree(file_d)
+                except OSError as error:
+                    print("No directory '%s' is removed" % file_d)
+                    # os.remove(file_d)
+                # os.remove(os.path.join(file_d, f))
+            # del file_d
+            # del all_aux[str(ckpt_to_delete)]
             # for blob in client.list_blobs(bucket, prefix=f"{path}/step_{ckpt_to_delete}/"):
             #     # print(f"deleting {blob.name}")
             #     assert path in blob.name
