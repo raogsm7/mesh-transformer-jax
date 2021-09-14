@@ -317,28 +317,28 @@ class CausalTransformer:
         # config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
 
 
-        params = {
-          "layers": 3,
-          "d_model": 1024,
-          "n_heads": 16,
-          "n_vocab": 50400,
-          "norm": "layernorm",
-          "pe": "rotary",
-          "pe_rotary_dims": 64,
+        # params = {
+        #   "layers": 3,
+        #   "d_model": 1024,
+        #   "n_heads": 16,
+        #   "n_vocab": 50400,
+        #   "norm": "layernorm",
+        #   "pe": "rotary",
+        #   "pe_rotary_dims": 64,
 
-          "seq": 512,
-          "cores_per_replica": 8,
-          "per_replica_batch": 1,
-        }
+        #   "seq": 512,
+        #   "cores_per_replica": 8,
+        #   "per_replica_batch": 1,
+        # }
 
-        per_replica_batch = params["per_replica_batch"]
-        cores_per_replica = params["cores_per_replica"]
-        seq = params["seq"]
-        print("per_replica_batch, cores_per_replica, seq***", per_replica_batch, cores_per_replica, seq)
+        # per_replica_batch = params["per_replica_batch"]
+        # cores_per_replica = params["cores_per_replica"]
+        # seq = params["seq"]
+        # print("per_replica_batch, cores_per_replica, seq***", per_replica_batch, cores_per_replica, seq)
 
-        total_batch = per_replica_batch * jax.device_count() // cores_per_replica
+        # total_batch = per_replica_batch * jax.device_count() // cores_per_replica
 
-        print("total_batch", total_batch)
+        # print("total_batch", total_batch)
         #added RG
         
         loss, last_loss, grad_norm, grad_norm_micro, self.state = self.train_xmap(self.state, obs, target)

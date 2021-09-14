@@ -60,7 +60,7 @@ def parse_args():
 
 def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     assert path
-    # client = storage.Client()
+    # client = storage.Clienxt()
 
     if aux is None:
         aux = {}
@@ -83,7 +83,8 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     res = []
     for shard_id in range(mp):
         # write_ckpt(network.state, f"gs://{bucket}/{path}/step_{step}/", shard_id)
-        write_ckpt(network.state, f"/{path}/step_{step}/", shard_id)
+        # write_ckpt(network.state, f"/{path}/step_{step}/", shard_id)
+        write_ckpt(network.state, f"/{ckpt_dir}/step_{step}/", shard_id)
 
     print(f"Wrote checkpoint in {time.time() - start:.06}s")
 
@@ -105,10 +106,11 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
 
         if delete_old:
             print(f"deleting checkpoint {ckpt_to_delete}")
-            for blob in client.list_blobs(bucket, prefix=f"{path}/step_{ckpt_to_delete}/"):
-                # print(f"deleting {blob.name}")
-                assert path in blob.name
-                blob.delete()
+            del all_aux[str(ckpt_to_delete)]
+            # for blob in client.list_blobs(bucket, prefix=f"{path}/step_{ckpt_to_delete}/"):
+            #     # print(f"deleting {blob.name}")
+            #     assert path in blob.name
+            #     blob.delete()
         else:
             print(f"keeping checkpoint {ckpt_to_delete}")
 
@@ -175,6 +177,7 @@ if __name__ == "__main__":
 
     bucket = params["bucket"]
     model_dir = params["model_dir"]
+    ckpt_dir = params["ckpt_dir"]
     layers = params["layers"]
     d_model = params["d_model"]
     n_heads = params["n_heads"]

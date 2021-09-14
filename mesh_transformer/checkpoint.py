@@ -34,6 +34,7 @@ def index_weights(weights, idx):
 def write(x, ckpt_dir):
     # start = time.time()
     idx, i = x
+    # ckpt_dir = "/content/ckpt_dir/"
     file_path = ckpt_dir + f"{idx}.npz"
     for _ in range(3):
         try:
