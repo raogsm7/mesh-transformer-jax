@@ -5,7 +5,7 @@ import time
 import jax
 import numpy as np
 import optax
-
+import shutil # RG
 import wandb
 from tqdm import tqdm
 
@@ -109,7 +109,7 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
 
         if delete_old:
             print(f"deleting checkpoint {ckpt_to_delete}")
-            file_d = f"{path}/step_{ckpt_to_delete}/" 
+            file_d = f"/{path}/step_{ckpt_to_delete}/" 
             for f in os.listdir(file_d):
                 try:
                     shutil.rmtree(file_d)
@@ -189,7 +189,6 @@ if __name__ == "__main__":
 
     bucket = params["bucket"]
     model_dir = params["model_dir"]
-    ckpt_dir = params["ckpt_dir"]
     layers = params["layers"]
     d_model = params["d_model"]
     n_heads = params["n_heads"]
@@ -270,6 +269,7 @@ if __name__ == "__main__":
         print('`--tune_model_path` not passed: we are continuing a fine-tuning run from a checkpoint (or we are not fine-tuning)')
         fine_tuning = False
         initial_ckpt_model_dir = model_dir
+        # updates made for colab or gdrive
         # initial_ckpt_path = f"gs://{bucket}/{initial_ckpt_model_dir}"
         initial_ckpt_path = f"/{initial_ckpt_model_dir}"
         meta_path = f"{initial_ckpt_path}/meta.json"
