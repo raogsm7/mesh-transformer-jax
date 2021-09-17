@@ -2,8 +2,8 @@
   
 
 1. Loginto your google drive and create directories for 
-- MyDrive/colab_data/ckpt_dir
-- MyDrive/colab_data/finetuned_ckpt_dir
+  - MyDrive/colab_data/ckpt_dir
+  - MyDrive/colab_data/finetuned_ckpt_dir
 
 2. Upload checkpoint data to google drive or g drive
 - MyDrive/colab_data/ckpt_dir/step_0/shard_0.....
