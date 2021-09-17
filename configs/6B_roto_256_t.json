@@ -22,7 +22,7 @@
   "tpu_size": 2,
 
   "bucket": ".",
-  "model_dir": "content/mesh-transformer-jax/data/ft_Data",
+  "model_dir": "content/mesh-transformer-jax/data/ckpt_dir",
 
   "train_set": "openwebtext.train.index",
   "val_set": {
