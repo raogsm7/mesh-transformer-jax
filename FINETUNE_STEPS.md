@@ -2,14 +2,14 @@
   
 
 1. Loginto your google drive and create directories for 
-    * MyDrive/colab_data/ckpt_dir
-    * MyDrive/colab_data/finetuned_ckpt_dir
+    - MyDrive/colab_data/ckpt_dir
+    - MyDrive/colab_data/finetuned_ckpt_dir
 
 2. Upload checkpoint data to google drive or g drive
-    - MyDrive/colab_data/ckpt_dir/step_0/shard_0.....
+      - MyDrive/colab_data/ckpt_dir/step_0/shard_0.....
 
 3. Upload tfrecords of your data to gdrive or map local drive to gdrive. Following drive mapped to g-drive:
-- <"your computername">/openwebtext_tokenized/<"all ttf recordes">
+    - <"your computername">/openwebtext_tokenized/<"all ttf recordes">
 
 4. Open GPT-J-6B_Train_v1.ipynb from https://colab.research.google.com/drive/1u4aJcexh2ONBYG97XdXLWr79FArwEl85?usp=sharing 
 
@@ -24,20 +24,20 @@ from google.colab import drive
 System will provide you with link for API key, click the link and login with your credentials and input the key. Your google drive is now mounted
 
 6. Run the cell that have !git clone ...... 
-- It loads the the repo from github
-- Runs requirements file
-- installs jax and tensorflow
+    - It loads the the repo from github
+    - Runs requirements file
+    - installs jax and tensorflow
 
 
 7. Open index file for train and val
 
-- Locate the index file for train at "/content/mesh-transformer-jax/data/openwebtext.train.index"
-- update the file with path for uploaded tf records 
-- Similarly update the index file for val at "/content/mesh-transformer-jax/data/openwebtext.val.index"
+    - Locate the index file for train at "/content/mesh-transformer-jax/data/openwebtext.train.index"
+    - update the file with path for uploaded tf records 
+    - Similarly update the index file for val at "/content/mesh-transformer-jax/data/openwebtext.val.index"
 
 8. Update config file paramters as per TPU size and Cloud or Gdrive 
 
-- Config file for finetune is at "mesh-transformer-jax/configs/6B_roto_256_ft.json
+    - Config file for finetune is at "mesh-transformer-jax/configs/6B_roto_256_ft.json
 
 
 ```
