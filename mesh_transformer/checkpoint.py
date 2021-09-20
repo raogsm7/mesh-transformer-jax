@@ -3,6 +3,7 @@ import io
 import json
 import time
 import os
+import shutil
 
 import jax
 import jax.numpy as jnp

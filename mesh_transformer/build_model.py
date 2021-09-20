@@ -14,8 +14,8 @@ from ray_tpu import create_tpu, wait_til, get_connection, start_ray
 def build_model(params, tpu_name, region, preemptible, version=1):
     gradient_accumulation_steps = params.get("gradient_accumulation_steps", 1)
     cores_per_replica = params["cores_per_replica"]
-    tpu_size = params["tpu_size"]
     print("tpu_size", tpu_size, cores_per_replica, "cores_per_replica")
+
     warmup_steps = params["warmup_steps"]
     anneal_steps = params["anneal_steps"]
     lr = params["lr"]
@@ -24,19 +24,29 @@ def build_model(params, tpu_name, region, preemptible, version=1):
 
     assert tpu_size in [8, 32, 128, 256, 512]
 
-    create_tpu(tpu_name, region, f"v3-{tpu_size}", preemptible)
-    assert wait_til(tpu_name, region, {'state': 'READY', 'health': 'HEALTHY'})
+    model_dir = params["model_dir"]
+    layers = params["layers"]
+    d_model = params["d_model"]
+    n_heads = params["n_heads"]
+    n_vocab = params["n_vocab"]
+    seq = params["seq"]
+    norm = params["norm"]
 
-    conns = get_connection(tpu_name, region)
-    print ("conns", conns)
+    # create_tpu(tpu_name, region, f"v3-{tpu_size}", preemptible)
+    # assert wait_til(tpu_name, region, {'state': 'READY', 'health': 'HEALTHY'})
 
-    assert len(conns) * 8 == tpu_size, "wrong size TPU for config"
+    # conns = get_connection(tpu_name, region)
+    # print ("conns", conns)
 
-    head_info = ray.init(include_dashboard=False, object_store_memory=10**9)
-    address = head_info['redis_address']
+    # assert len(conns) * 8 == tpu_size, "wrong size TPU for config"
 
-    with multiprocessing.pool.ThreadPool(processes=len(conns)) as p:
-        p.map(functools.partial(start_ray, address=address, version=version), conns)
+    # head_info = ray.init(include_dashboard=False, object_store_memory=10**9)
+    # address = head_info['redis_address']
+
+    # with multiprocessing.pool.ThreadPool(processes=len(conns)) as p:
+    #     p.map(functools.partial(start_ray, address=address, version=version), conns)
+
+    len_conns = 8
 
     opt = optax.chain(
         optax.scale(1 / gradient_accumulation_steps),
@@ -49,6 +59,10 @@ def build_model(params, tpu_name, region, preemptible, version=1):
 
     params["optimizer"] = opt
 
+    # added by RG
+    start = time.time()
+    tpu_size = jax.device_count()
+
     if version == 2:
         model_fn = functools.partial(CausalTransformerV2, params)
     elif version == 1:
@@ -56,5 +70,5 @@ def build_model(params, tpu_name, region, preemptible, version=1):
     else:
         raise Exception(f"Version {version} does not exist")
 
-    t = TPUCluster((tpu_size // cores_per_replica, cores_per_replica), len(conns), model_fn, version=version)
+    t = TPUCluster((tpu_size // cores_per_replica, cores_per_replica), len_conns, model_fn, version=version)
     return t
