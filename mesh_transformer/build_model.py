@@ -10,10 +10,24 @@ from mesh_transformer.transformer_shard import CausalTransformer, CausalTransfor
 from mesh_transformer.util import clip_by_global_norm, additive_weight_decay
 from ray_tpu import create_tpu, wait_til, get_connection, start_ray
 
+import time
+import jax
+from jax.experimental import maps
+import os
+import requests 
+from jax.config import config
+colab_tpu_addr = os.environ['COLAB_TPU_ADDR'].split(':')[0]
+url = f'http://{colab_tpu_addr}:8475/requestversion/tpu_driver0.1_dev20210607'
+requests.post(url)
+
+# The following is required to use TPU Driver as JAX's backend.
+config.FLAGS.jax_xla_backend = "tpu_driver"
+config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
 
 def build_model(params, tpu_name, region, preemptible, version=1):
     gradient_accumulation_steps = params.get("gradient_accumulation_steps", 1)
     cores_per_replica = params["cores_per_replica"]
+    tpu_size = jax.device_count()
     print("tpu_size", tpu_size, cores_per_replica, "cores_per_replica")
 
     warmup_steps = params["warmup_steps"]
@@ -61,11 +75,23 @@ def build_model(params, tpu_name, region, preemptible, version=1):
 
     # added by RG
     start = time.time()
-    tpu_size = jax.device_count()
+
+    if tpu_size < cores_per_replica:
+        msg = f"each shard needs a separate device, but device count ({tpu_size}) < shard count ({cores_per_replica})"
+        raise ValueError(msg)
+    print(f"jax devices: {tpu_size}")
+    print(f"jax runtime initialized in {time.time() - start:.06}s")
+
+    mesh_shape = (tpu_size // cores_per_replica, cores_per_replica)
+    devices = np.array(jax.devices()).reshape(mesh_shape)
+    # added by RG
+    
 
     if version == 2:
         model_fn = functools.partial(CausalTransformerV2, params)
     elif version == 1:
+        print("initializing network function") #added by RG
+        # model_fn = functools.partial(CausalTransformer, params)
         model_fn = functools.partial(CausalTransformer, params)
     else:
         raise Exception(f"Version {version} does not exist")

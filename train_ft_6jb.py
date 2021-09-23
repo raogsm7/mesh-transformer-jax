@@ -142,7 +142,7 @@ def train_step(network, data):
         "target": data[:, :, 1:],
     }
 
-    print("inputs", inputs)
+    # print("inputs", inputs)
     # import os
     # import requests 
     # from jax.config import config
