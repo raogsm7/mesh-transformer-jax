@@ -303,6 +303,7 @@ class CausalTransformer:
         # assert (sample["obs"][:, 1:] == sample["target"][:, -1])
 
         # start = time.time()
+        
         # added RG
         # import os
         # import requests 
