@@ -342,7 +342,7 @@ if __name__ == "__main__":
             start = time.time()
             # network.state = read_ckpt(network.state, initial_ckpt_state_path, devices.shape[1], load_opt=(not args.fresh_opt))
 
-            if fine_tuning:
+            # if fine_tuning:
             #     # overwrite the loaded scheduler step with zeros
             #     # this makes fine-tuning use the lr schedule in
                 # network.state["opt_state"][-1] = init_sched_state
