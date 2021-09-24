@@ -5,7 +5,7 @@ import time
 import jax
 import numpy as np
 import optax
-import shutil # RG
+import shutil # updated by RG
 import wandb
 from tqdm import tqdm
 
@@ -20,6 +20,8 @@ from google.cloud.exceptions import NotFound
 
 from mesh_transformer.util import clip_by_global_norm, additive_weight_decay
 
+
+# updated by RG to include jax and tpu driver
 import os
 import requests 
 from jax.config import config
@@ -31,6 +33,7 @@ requests.post(url)
 # The following is required to use TPU Driver as JAX's backend.
 config.FLAGS.jax_xla_backend = "tpu_driver"
 config.FLAGS.jax_backend_target = "grpc://" + os.environ['COLAB_TPU_ADDR']
+# updated by RG
 
 def parse_args():
     # Parse command line arguments
@@ -60,13 +63,15 @@ def parse_args():
 
 def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     assert path
-    # client = storage.Clienxt()
+    # only to be used for google cloud - RG
+    # client = storage.Clien()
 
     if aux is None:
         aux = {}
 
     try:
         # with open(f"gs://{bucket}/{path}/meta.json", "r") as f:
+        # updated by RG to use repo path
         with open(f"/{path}/meta.json", "r") as f:
             meta = json.load(f)
     except:
@@ -82,6 +87,7 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     start = time.time()
     res = []
     for shard_id in range(mp):
+        # updated by RG for gdrive path
         path_ckpt = f"/{path}/step_{step}/"
         print ("path_ckpt", path_ckpt)
         # write_ckpt(network.state, f"gs://{bucket}/{path}/step_{step}/", shard_id)
@@ -92,6 +98,8 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     print(f"Wrote checkpoint in {time.time() - start:.06}s")
 
     # with open(f"gs://{bucket}/{path}/meta.json", "r") as f:
+    
+    # Updated by RG for repo path 
     with open(f"/{path}/meta.json", "r") as f:
         meta = json.load(f)
 
@@ -108,6 +116,7 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
             print(f"failed to delete the aux state for {step}")
 
         if delete_old:
+            # updated by RG to delete old checkpoint data
             print(f"deleting checkpoint {ckpt_to_delete}")
             file_d = f"/{path}/step_{ckpt_to_delete}/" 
             for f in os.listdir(file_d):
@@ -129,6 +138,7 @@ def save(network, step, bucket, path, mp, aux=None, keep_n=3, delete_old=True):
     all_aux[step] = aux
     meta["aux"] = all_aux
 
+    # updated by RG to include repo path
     # with open(f"gs://{bucket}/{path}/meta.json", "w") as f:
     with open(f"/{path}/meta.json", "w") as f:
         json.dump(meta, f)
@@ -142,6 +152,7 @@ def train_step(network, data):
         "target": data[:, :, 1:],
     }
 
+    # kept by RG to resolve tpu issues
     # print("inputs", inputs)
     # import os
     # import requests 
@@ -295,6 +306,7 @@ if __name__ == "__main__":
     # set up datasets
     print("setting up datasets")
 
+    # update by RG to include training set for fine tuning
     train_dataset = TFRecordNewInputs(f"/content/mesh-transformer-jax/data/{params['train_set']}",
                                       batch_size=(
                                           gradient_accumulation_steps,
@@ -328,12 +340,12 @@ if __name__ == "__main__":
                 init_sched_state = network.state["opt_state"][-1]
 
             start = time.time()
-            # network.state = read_ckpt(network.state, initial_ckpt_state_path, devices.shape[1], load_opt=(not args.fresh_opt))
+            network.state = read_ckpt(network.state, initial_ckpt_state_path, devices.shape[1], load_opt=(not args.fresh_opt))
 
-            # if fine_tuning:
+            if fine_tuning:
             #     # overwrite the loaded scheduler step with zeros
             #     # this makes fine-tuning use the lr schedule in
-            #     network.state["opt_state"][-1] = init_sched_state
+                network.state["opt_state"][-1] = init_sched_state
 
             print(f"network loaded in {time.time() - start:.06}s")
 

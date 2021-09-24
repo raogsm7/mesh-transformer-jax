@@ -40,13 +40,15 @@ def write(x, ckpt_dir):
     # mkdir(parents=True, exist_ok=True)
     # print("ckpt_dir", ckpt_dir)
     # ckpt_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Added by RG for ckpt directof
     try:
         os.makedirs(ckpt_dir, exist_ok = True)
         print("Directory '%s' created successfully" % ckpt_dir)
     except OSError as error:
         print("Directory '%s' can not be created" % ckpt_dir)
     # ckpt_dir = "/content/ckpt_dir/"
-    file_path = ckpt_dir + f"{idx}.npz"
+    
     print("file_path", file_path)
     file_path = ckpt_dir + f"{idx}.npz"
     for _ in range(3):
@@ -148,30 +150,30 @@ def reshard(x, old_shape):
 def read_ckpt(pytree, dir, shards_in, shards_out=None, load_opt=True):
     if shards_out is None:
         shards_out = shards_in
-        print("shards", shards_in, shards_out)
 
     old_flattened, structure = jax.tree_flatten(pytree)
-    print("old_flattened", old_flattened)
+    print("structure", structure)
     original_opt_state = pytree["opt_state"]
 
     # TODO: figure out how to use a process pool here for more speed
     with multiprocessing.pool.ThreadPool(shards_in) as p:
         start = time.time()
         shards = list((p.imap(read_shard, [f"{dir}shard_{i}/" for i in range(shards_in)])))
-        print("Dir shard", f"{dir}shard_{i}/")
+        print("Dir shard", f"{dir}shard_10/")
         print(f"read from disk/gcs in {time.time() - start:.06}s")
 
     def _unshard(shards, old_flattened):
         unsharded = []
 
         for old, *all_shards in zip(old_flattened, *shards):
-            print("old_flattened", old_flattened, shards)
+            print("old_flattened shards", all_shards, shards)
             x = np.stack(all_shards)
             # No idea why this is V2...?
             if x.dtype == np.dtype('V2'):
+                print("insude v2 code")
                 x.dtype = jnp.bfloat16
 
-            print("x", x.shape, old.shape, x.dtype)
+            print("x", x.shape, old.shape, x.dtype, old.dtype)
             print("shards", shards_in, shards_out)
 
 

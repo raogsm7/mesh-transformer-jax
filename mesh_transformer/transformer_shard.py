@@ -295,8 +295,8 @@ class CausalTransformer:
         print("you are inside train function")
         obs = jnp.transpose(sample["obs"], (1, 0, 2))
         target = jnp.transpose(sample["target"], (1, 0, 2))
-        print("obs", obs)
-        print("target", target)
+        # print("obs", obs)
+        # print("target", target)
         # print("train sample", obs.shape)
         # print("train target", target.shape)
 
