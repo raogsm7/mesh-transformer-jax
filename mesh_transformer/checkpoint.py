@@ -3,7 +3,7 @@ import io
 import json
 import time
 import os
-import shutil
+import shutil # added by RG
 
 import jax
 import jax.numpy as jnp
@@ -49,8 +49,9 @@ def write(x, ckpt_dir):
         print("Directory '%s' can not be created" % ckpt_dir)
     # ckpt_dir = "/content/ckpt_dir/"
     
-    print("file_path", file_path)
     file_path = ckpt_dir + f"{idx}.npz"
+    print("file_path", file_path)
+    
     for _ in range(3):
         try:
             with open(file_path, "wb") as f:
