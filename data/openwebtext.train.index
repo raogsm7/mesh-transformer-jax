@@ -1,12 +1,52 @@
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_0_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_100_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_101_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_102_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_103_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_104_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_105_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_106_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_107_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_108_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_109_0_1000.tfrecords
-/content/drive/Othercomputers/My MacBook Pro (1)/openwebtext_tokenized/openwebtext_110_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_0_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_1_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_2_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_3_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_4_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_5_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_6_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_7_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_8_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_9_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_10_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_11_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_12_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_13_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_14_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_15_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_16_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_17_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_18_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_19_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_20_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_20_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_21_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_22_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_23_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_24_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_25_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_26_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_27_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_28_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_29_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_30_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_31_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_32_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_33_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_34_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_35_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_36_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_37_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_38_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_39_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_40_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_41_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_42_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_43_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_44_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_45_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_46_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_47_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_48_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_49_0_1000.tfrecords
+gs://gpt_bucket_01/openwebtext_tokenized/openwebtext_50_0_1000.tfrecords
